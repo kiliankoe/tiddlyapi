@@ -3,6 +3,8 @@ import json
 
 from flask import Flask, request, Response
 
+from tiddler import parse_tiddler
+
 app = Flask(__name__)
 
 TIDDLYWIKI_DIRECTORY = os.environ['TIDDLYWIKI_DIRECTORY']
@@ -28,6 +30,7 @@ def get_tiddler(name: str):
         return Response(status=404)
     with open(filepath) as file:
         tiddler = file.read()
-    return tiddler
+    tiddler = parse_tiddler(tiddler)
+    return Response(json.dumps(tiddler, sort_keys=True), mimetype='application/json')
 
 app.run(host='0.0.0.0')
