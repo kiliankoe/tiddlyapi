@@ -5,7 +5,7 @@ from flask import Flask, request, Response
 
 app = Flask(__name__)
 
-TIDDLYWIKI_DIRECTORY = './wiki'
+TIDDLYWIKI_DIRECTORY = os.environ['TIDDLYWIKI_DIRECTORY']
 
 @app.route('/', methods=['GET'])
 def root():
