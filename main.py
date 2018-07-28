@@ -4,14 +4,14 @@ import json
 from flask import Flask, Response
 
 from tiddler import parse_tiddler
-from auth import challenge
+from auth import require_auth
 
 app = Flask(__name__)
 
 TIDDLYWIKI_DIRECTORY = os.environ['TIDDLYWIKI_DIRECTORY']
 
 @app.route('/', methods=['GET'])
-@challenge
+@require_auth
 def root():
     wiki = list(os.walk(TIDDLYWIKI_DIRECTORY + '/tiddlers'))[0]
     tiddlers = []
@@ -24,7 +24,7 @@ def root():
     return Response(json.dumps(tiddlers), mimetype='application/json')
 
 @app.route('/t/<name>', methods=['GET'])
-@challenge
+@require_auth
 def get_tiddler(name: str):
     filepath = TIDDLYWIKI_DIRECTORY + '/tiddlers/' + name + '.tid'
     if not os.path.exists(filepath):
