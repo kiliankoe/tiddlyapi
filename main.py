@@ -1,7 +1,7 @@
 import os
 import json
 
-from flask import Flask, request, Response
+from flask import Flask, Response
 
 from tiddler import parse_tiddler
 
