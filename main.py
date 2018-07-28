@@ -15,10 +15,8 @@ def root():
     tiddlers = []
     for tiddler in wiki[2]:
         if tiddler.startswith('$__'):
-            # shadow/system tiddler
             continue
-        elif '.jpg' in tiddler or '.png' in tiddler:
-            # images
+        if '.jpg' in tiddler or '.png' in tiddler:
             continue
         tiddlers.append(tiddler.replace('.tid', ''))
     return Response(json.dumps(tiddlers), mimetype='application/json')
