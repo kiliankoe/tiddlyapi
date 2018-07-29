@@ -1,6 +1,37 @@
+import os
 from datetime import datetime
 
-def parse_tiddler(raw_text: str):
+TIDDLYWIKI_DIRECTORY = os.environ['TIDDLYWIKI_DIRECTORY']
+
+def all_tiddlers(include_system=False, include_images=False):
+    tiddlers = os.listdir(TIDDLYWIKI_DIRECTORY + '/tiddlers/')
+    if not include_system:
+        tiddlers = [tid for tid in tiddlers if not tid.startswith('$__')]
+    if not include_images:
+        tiddlers = [tid for tid in tiddlers if not '.jpg' in tid
+                                            and not '.png' in tid]
+    tiddlers = [tid.replace('.tid', '') for tid in tiddlers]
+    return tiddlers
+
+def contents_of_tiddler(name: str):
+    filepath = TIDDLYWIKI_DIRECTORY + '/tiddlers/' + name + '.tid'
+    if not os.path.exists(filepath):
+        return None
+    with open(filepath) as file:
+        tiddler = file.read()
+    return _parse_tiddler(tiddler)
+
+def search_all_tiddlers(query: str):
+    tiddlers = all_tiddlers()
+    matches = []
+    for tiddler in tiddlers:
+        with open(TIDDLYWIKI_DIRECTORY + '/tiddlers/' + tiddler + '.tid') as file:
+            contents = file.read()
+            if query.lower() in contents.lower():
+                matches.append(tiddler)
+    return matches
+
+def _parse_tiddler(raw_text: str):
     meta = []
     content = ''
     lines = raw_text.split('\n')
